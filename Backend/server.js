@@ -1,10 +1,16 @@
-require("dotenv").config()
-const app = require("./src/app")
-const connectToDB = require("./src/config/database")
+process.on('uncaughtException', (err) => {
+    console.error("🔥 FATAL ERROR ON STARTUP:", err);
+});
 
-connectToDB()
+require("dotenv").config();
+const app = require("./src/app");
+const connectToDB = require("./src/config/database");
 
+console.log("Attempting to connect to database...");
+connectToDB();
 
-app.listen(3000, () => {
-    console.log("Server is running on port 3000")
-})
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+    console.log(`✅ Server is successfully running on port ${PORT}`);
+});
