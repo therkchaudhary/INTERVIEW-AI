@@ -3,13 +3,16 @@
     "node": "24.16.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npx nodemon server.js"
+    "build": "npm install && npx puppeteer browsers install chrome"
   },
   "name": "yt-genai",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx nodemon server.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -20,7 +23,6 @@
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "html-pdf-node": "^1.0.8",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.2.1",
     "multer": "^2.0.2",
