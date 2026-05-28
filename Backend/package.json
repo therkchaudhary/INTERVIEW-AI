@@ -1,6 +1,9 @@
 {
-  "engines":{
+  "engines": {
     "node": "24.16.0"
+  },
+  "scripts": {
+    "build": "npm install && npx puppeteer browsers install chrome"
   },
   "name": "yt-genai",
   "version": "1.0.0",

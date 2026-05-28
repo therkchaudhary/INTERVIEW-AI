@@ -42,7 +42,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 `
 
     const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.0-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -96,13 +96,23 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                     `
 
     const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.0-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
             responseSchema: zodToJsonSchema(resumePdfSchema),
         }
     })
+
+    const browser = await puppeteer.launch({
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage'
+    ],
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
+})
 
 
     const jsonContent = JSON.parse(response.text)
