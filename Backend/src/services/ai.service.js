@@ -1,7 +1,8 @@
 const { GoogleGenAI } = require("@google/genai")
 const { z } = require("zod")
 const { zodToJsonSchema } = require("zod-to-json-schema")
-const puppeteer = require("puppeteer")
+const puppeteer = require("puppeteer-core")
+const chromium = require("@sparticuz/chromium")
 
 const interviewReportSchema = z.object({
     matchScore: z.number().describe("A score between 0 and 100 indicating how well the candidate's profile matches the job describe"),
@@ -59,19 +60,17 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 
 
 
-const puppeteerLaunchOptions = {
-    headless: true,
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-    ],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+async function launchBrowser() {
+    return puppeteer.launch({
+        args: [ ...chromium.args, "--hide-scrollbars", "--disable-web-security" ],
+        defaultViewport: chromium.defaultViewport,
+        executablePath: await chromium.executablePath(),
+        headless: chromium.headless,
+    })
 }
 
 async function generatePdfFromHtml(htmlContent) {
-    const browser = await puppeteer.launch(puppeteerLaunchOptions)
+    const browser = await launchBrowser()
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 
