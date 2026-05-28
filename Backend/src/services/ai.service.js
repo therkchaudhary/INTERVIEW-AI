@@ -59,10 +59,19 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
 
 
 
+const puppeteerLaunchOptions = {
+    headless: true,
+    args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+    ],
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
+}
+
 async function generatePdfFromHtml(htmlContent) {
-    const browser = await puppeteer.launch({
-        args: [ '--no-sandbox', '--disable-setuid-sandbox' ]
-    })
+    const browser = await puppeteer.launch(puppeteerLaunchOptions)
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" })
 
@@ -115,18 +124,6 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
             responseSchema: zodToJsonSchema(resumePdfSchema),
         }
     })
-
-    const browser = await puppeteer.launch({
-    headless: "shell",
-    args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
-        '--disable-gpu'
-    ],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
-})
-
 
     const jsonContent = JSON.parse(response.text)
 
