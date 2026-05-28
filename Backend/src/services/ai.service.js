@@ -105,13 +105,14 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
     })
 
     const browser = await puppeteer.launch({
-    headless: true,
+    headless: "shell",
     args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage'
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
     ],
-    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null
+    executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || undefined
 })
 
 
