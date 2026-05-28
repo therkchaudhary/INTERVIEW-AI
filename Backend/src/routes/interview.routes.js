@@ -12,7 +12,19 @@ const interviewRouter = express.Router()
  * @description generate new interview report on the basis of user self description,resume pdf and job description.
  * @access private
  */
-interviewRouter.post("/", authMiddleware.authUser, upload.single("resume"), interviewController.generateInterViewReportController)
+function uploadResume(req, res, next) {
+    upload.single("resume")(req, res, (err) => {
+        if (err) {
+            if (err.code === "LIMIT_FILE_SIZE") {
+                return res.status(400).json({ message: "File too large. Maximum size is 5MB." })
+            }
+            return res.status(400).json({ message: err.message })
+        }
+        next()
+    })
+}
+
+interviewRouter.post("/", authMiddleware.authUser, uploadResume, interviewController.generateInterViewReportController)
 
 /**
  * @route GET /api/interview/report/:interviewId

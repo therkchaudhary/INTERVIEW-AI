@@ -355,6 +355,24 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 }
 
 
+.form-error {
+    color: #f87171;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.generating-status,
+.reports-loading {
+    color: $text-muted;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+
+.generate-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 // ── Page Footer ───────────────────────────────────────────────────────────────
 .page-footer {
     display: flex;

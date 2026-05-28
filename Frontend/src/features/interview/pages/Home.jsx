@@ -5,9 +5,11 @@ import { useNavigate } from 'react-router'
 
 const Home = () => {
 
-    const { loading, generateReport,reports } = useInterview()
+    const { loading, generateReport, reports } = useInterview()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
+    const [ isGenerating, setIsGenerating ] = useState(false)
+    const [ errorMessage, setErrorMessage ] = useState("")
     const resumeInputRef = useRef()
     const [ selectedFile, setSelectedFile ] = useState(null)
 
@@ -45,17 +47,32 @@ const Home = () => {
     const navigate = useNavigate()
 
     const handleGenerateReport = async () => {
-        const resumeFile = resumeInputRef.current.files[ 0 ]
-        const data = await generateReport({ jobDescription, selfDescription, resumeFile })
-        navigate(`/interview/${data._id}`)
-    }
+        setErrorMessage("")
 
-    if (loading) {
-        return (
-            <main className='loading-screen'>
-                <h1>Loading your interview plan...</h1>
-            </main>
-        )
+        if (!jobDescription.trim()) {
+            setErrorMessage("Job description is required.")
+            return
+        }
+
+        const resumeFile = selectedFile || resumeInputRef.current?.files?.[ 0 ]
+        if (!selfDescription.trim() && !resumeFile) {
+            setErrorMessage("Please upload a resume or add a self description.")
+            return
+        }
+
+        setIsGenerating(true)
+        try {
+            const data = await generateReport({ jobDescription, selfDescription, resumeFile })
+            if (!data?._id) {
+                setErrorMessage("Failed to generate interview plan. Please try again.")
+                return
+            }
+            navigate(`/interview/${data._id}`)
+        } catch (err) {
+            setErrorMessage(err.response?.data?.message || "Failed to generate interview plan. Please try again.")
+        } finally {
+            setIsGenerating(false)
+        }
     }
 
     return (
@@ -81,6 +98,7 @@ const Home = () => {
                             <span className='badge badge--required'>Required</span>
                         </div>
                         <textarea
+                            value={jobDescription}
                             onChange={(e) => { setJobDescription(e.target.value) }}
                             className='panel__textarea'
                             placeholder={`Paste the full job description here...\ne.g. 'Senior Frontend Engineer at Google requires proficiency in React, TypeScript, and large-scale system design...'`}
@@ -112,14 +130,13 @@ const Home = () => {
                                 htmlFor='resume'
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={handleDrop}
-                                onClick={() => { if (resumeInputRef.current) resumeInputRef.current.click() }}
                             >
                                 <span className='dropzone__icon'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 16 12 12 8 16" /><line x1="12" y1="12" x2="12" y2="21" /><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" /></svg>
                                 </span>
                                 <p className='dropzone__title'>Click to upload or drag &amp; drop</p>
-                                <p className='dropzone__subtitle'>PDF or DOCX (Max 5MB)</p>
-                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='.pdf,.docx' onChange={handleFileChange} />
+                                <p className='dropzone__subtitle'>PDF only (Max 5MB)</p>
+                                <input ref={resumeInputRef} hidden type='file' id='resume' name='resume' accept='application/pdf,.pdf' onChange={handleFileChange} />
                                 {selectedFile && (
                                     <p className='dropzone__filename'>{selectedFile.name} <span className='file-size'>({Math.round(selectedFile.size/1024)} KB)</span></p>
                                 )}
@@ -133,6 +150,7 @@ const Home = () => {
                         <div className='self-description'>
                             <label className='section-label' htmlFor='selfDescription'>Quick Self-Description</label>
                             <textarea
+                                value={selfDescription}
                                 onChange={(e) => { setSelfDescription(e.target.value) }}
                                 id='selfDescription'
                                 name='selfDescription'
@@ -154,8 +172,13 @@ const Home = () => {
                 {/* Card Footer */}
                 <div className='interview-card__footer'>
                     <span className='footer-info'>AI-Powered Strategy Generation &bull; Approx 30s</span>
+                    {errorMessage && <p className='form-error'>{errorMessage}</p>}
+                    {isGenerating && (
+                        <p className='generating-status'>Generating your interview plan... this may take up to 30 seconds.</p>
+                    )}
                     <button
                         onClick={handleGenerateReport}
+                        disabled={isGenerating}
                         className='generate-btn'>
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z" /></svg>
                         Generate My Interview Strategy
@@ -164,7 +187,11 @@ const Home = () => {
             </div>
 
             {/* Recent Reports List */}
-            {reports.length > 0 && (
+            {loading && (
+                <p className='reports-loading'>Loading your recent plans...</p>
+            )}
+
+            {!loading && reports.length > 0 && (
                 <section className='recent-reports'>
                     <h2>My Recent Interview Plans</h2>
                     <ul className='reports-list'>
