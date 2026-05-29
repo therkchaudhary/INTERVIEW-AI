@@ -500,3 +500,191 @@ $severity-low: #3fb950;
         border-color: rgba($severity-low, 0.25);
     }
 }
+
+// ── Light Theme Overrides ─────────────────────────────────────────────────────
+html[data-theme="light"] {
+
+    // Page shell
+    .interview-page {
+        background-color: #f3f4f6;
+        color: #111827;
+    }
+
+    // Layout card
+    .interview-layout {
+        background-color: #ffffff;
+        border-color: #d1d5db;
+    }
+
+    .interview-divider {
+        background-color: #d1d5db;
+    }
+
+    // ── Left Nav ──
+    .interview-nav {
+        &__home {
+            background-color: #f9fafb;
+            border-color: #d1d5db;
+            color: #111827;
+
+            &:hover {
+                border-color: rgba($accent, 0.5);
+                background-color: rgba($accent, 0.06);
+            }
+        }
+
+        &__label {
+            color: #6b7280;
+        }
+
+        &__item {
+            color: #6b7280;
+
+            &:hover {
+                background-color: #f3f4f6;
+                color: #111827;
+            }
+
+            &--active {
+                background-color: rgba($accent, 0.08);
+                color: $accent;
+            }
+        }
+    }
+
+    // ── Center Content ──
+    .content-header {
+        border-bottom-color: #d1d5db;
+
+        h2 {
+            color: #111827;
+        }
+
+        &__count {
+            color: #6b7280;
+            background-color: #f3f4f6;
+            border-color: #d1d5db;
+        }
+    }
+
+    // Question cards
+    .q-card {
+        background-color: #f9fafb;
+        border-color: #d1d5db;
+
+        &:hover {
+            border-color: #9ca3af;
+        }
+
+        &__question {
+            color: #111827;
+        }
+
+        &__chevron {
+            color: #6b7280;
+
+            &--open {
+                color: $accent;
+            }
+        }
+
+        &__body {
+            border-top-color: #e5e7eb;
+        }
+
+        &__section p {
+            color: #4b5563;
+        }
+
+        &__tag {
+            &--intention {
+                color: #7c3aed;
+                background-color: rgba(#7c3aed, 0.08);
+                border-color: rgba(#7c3aed, 0.2);
+            }
+
+            &--answer {
+                color: #16a34a;
+                background-color: rgba(#16a34a, 0.08);
+                border-color: rgba(#16a34a, 0.2);
+            }
+        }
+    }
+
+    // ── Road Map ──
+    .roadmap-list::before {
+        background: linear-gradient(to bottom, $accent, rgba($accent, 0.15));
+    }
+
+    .roadmap-day {
+        &::before {
+            background-color: #ffffff;
+            border-color: $accent;
+        }
+
+        &__focus {
+            color: #111827;
+        }
+
+        &__tasks li {
+            color: #4b5563;
+        }
+
+        &__bullet {
+            background-color: #9ca3af;
+        }
+    }
+
+    // ── Right Sidebar ──
+    .sidebar-divider {
+        background-color: #d1d5db;
+    }
+
+    .match-score {
+        &__label {
+            color: #6b7280;
+        }
+
+        &__value {
+            color: #111827;
+        }
+
+        &__pct {
+            color: #6b7280;
+        }
+
+        &__sub {
+            color: #16a34a;
+        }
+    }
+
+    .skill-gaps__label {
+        color: #6b7280;
+    }
+
+    .skill-tag {
+        &--high {
+            color: #dc2626;
+            background-color: rgba(#dc2626, 0.08);
+            border-color: rgba(#dc2626, 0.2);
+        }
+
+        &--medium {
+            color: #d97706;
+            background-color: rgba(#d97706, 0.08);
+            border-color: rgba(#d97706, 0.2);
+        }
+
+        &--low {
+            color: #16a34a;
+            background-color: rgba(#16a34a, 0.08);
+            border-color: rgba(#16a34a, 0.2);
+        }
+    }
+
+    // Loading screen
+    .loading-screen {
+        background-color: #f3f4f6;
+        color: #111827;
+    }
+}
