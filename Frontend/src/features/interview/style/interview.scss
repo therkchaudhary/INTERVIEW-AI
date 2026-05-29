@@ -62,6 +62,29 @@ $severity-low: #3fb950;
 
 
 
+    &__home {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        width: 100%;
+        padding: 0.65rem 0.75rem;
+        margin-bottom: 0.75rem;
+        border: 1px solid $border-color;
+        border-radius: 0.5rem;
+        background-color: $bg-input;
+        color: $text-primary;
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border-color 0.2s, background-color 0.2s;
+        font-family: $font-stack;
+
+        &:hover {
+            border-color: rgba($accent, 0.5);
+            background-color: rgba($accent, 0.08);
+        }
+    }
+
     &__label {
         font-size: 0.7rem;
         font-weight: 600;
