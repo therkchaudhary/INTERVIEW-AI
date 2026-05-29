@@ -189,4 +189,4 @@ function wrapResumeHtml(fragmentHtml) {
 </html>`
 }
 
-module.exports = { wrapResumeHtml, extractResumeBody }
+module.exports = { wrapResumeHtml }
