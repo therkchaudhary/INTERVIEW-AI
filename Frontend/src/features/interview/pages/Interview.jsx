@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import '../style/interview.scss'
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate, useParams } from 'react-router'
+import { useTheme } from '../../theme/hooks/useTheme.js'
 
 
 
@@ -62,6 +63,7 @@ const Interview = () => {
     const { report, loading, getResumePdf } = useInterview()
     const { interviewId } = useParams()
     const navigate = useNavigate()
+    useTheme()
 
     if (loading || !report) {
         return (

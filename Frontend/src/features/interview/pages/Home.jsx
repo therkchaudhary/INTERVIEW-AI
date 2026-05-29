@@ -1,18 +1,19 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router'
 import { useAuth } from '../../auth/hooks/useAuth.js'
+import { useTheme } from '../../theme/hooks/useTheme.js'
 
 const Home = () => {
 
     const { loading, generateReport, reports, deleteReport } = useInterview()
     const { handleLogout } = useAuth()
+    const { theme, toggleTheme } = useTheme()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
     const [ isGenerating, setIsGenerating ] = useState(false)
     const [ errorMessage, setErrorMessage ] = useState("")
-    const [ theme, setTheme ] = useState(() => localStorage.getItem("theme") || "dark")
     const resumeInputRef = useRef()
     const [ selectedFile, setSelectedFile ] = useState(null)
 
@@ -49,13 +50,8 @@ const Home = () => {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-        document.documentElement.setAttribute("data-theme", theme)
-        localStorage.setItem("theme", theme)
-    }, [ theme ])
-
     const handleThemeToggle = () => {
-        setTheme((prev) => prev === "dark" ? "light" : "dark")
+        toggleTheme()
     }
 
     const onLogout = async () => {
