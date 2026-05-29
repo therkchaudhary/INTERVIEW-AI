@@ -4,6 +4,70 @@ const { zodToJsonSchema } = require("zod-to-json-schema")
 const puppeteer = require("puppeteer-core")
 const chromium = require("@sparticuz/chromium")
 
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash"
+
+function getFriendlyAiErrorMessage(err) {
+    const status = err?.status ?? err?.code
+    const raw = err?.message || String(err)
+
+    if (status === 429 || raw.includes("RESOURCE_EXHAUSTED") || raw.includes("429")) {
+        return "The AI service rate limit was reached. Wait about a minute and try again, or use a Google AI API key with available quota (https://aistudio.google.com/apikey)."
+    }
+
+    if (raw.includes("GOOGLE_GENAI_API_KEY")) {
+        return "AI API key is not configured on the server."
+    }
+
+    if (raw.trim().startsWith("{")) {
+        try {
+            const parsed = JSON.parse(raw)
+            const nested = parsed?.error?.message
+            if (nested) return getFriendlyAiErrorMessage({ message: nested, status: parsed?.error?.code })
+        } catch {
+            // ignore parse errors
+        }
+        return "AI service could not generate a response. Please try again in a minute."
+    }
+
+    if (raw.length > 200) {
+        return "AI service could not generate a response. Please try again later."
+    }
+
+    return raw
+}
+
+function wrapAiError(err) {
+    const friendly = getFriendlyAiErrorMessage(err)
+    const error = new Error(friendly)
+    const status = err?.status ?? err?.code
+    if (status === 429 || String(err?.message).includes("RESOURCE_EXHAUSTED")) {
+        error.statusCode = 429
+    } else {
+        error.statusCode = 503
+    }
+    return error
+}
+
+async function generateContent(ai, request) {
+    try {
+        return await ai.models.generateContent({
+            model: GEMINI_MODEL,
+            ...request,
+        })
+    } catch (err) {
+        throw wrapAiError(err)
+    }
+}
+
+function createAiClient() {
+    if (!process.env.GOOGLE_GENAI_API_KEY) {
+        throw new Error("GOOGLE_GENAI_API_KEY is not configured")
+    }
+    return new GoogleGenAI({
+        apiKey: process.env.GOOGLE_GENAI_API_KEY
+    })
+}
+
 const interviewReportSchema = z.object({
     matchScore: z.number().describe("A score between 0 and 100 indicating how well the candidate's profile matches the job describe"),
     technicalQuestions: z.array(z.object({
@@ -30,13 +94,7 @@ const interviewReportSchema = z.object({
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
-    if (!process.env.GOOGLE_GENAI_API_KEY) {
-        throw new Error("GOOGLE_GENAI_API_KEY is not configured")
-    }
-
-    const ai = new GoogleGenAI({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY
-    })
+    const ai = createAiClient()
 
     const prompt = `Generate an interview report for a candidate with the following details:
                         Resume: ${resume}
@@ -44,8 +102,7 @@ async function generateInterviewReport({ resume, selfDescription, jobDescription
                         Job Description: ${jobDescription}
 `
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+    const response = await generateContent(ai, {
         contents: prompt,
         config: {
             responseMimeType: "application/json",
@@ -90,13 +147,7 @@ async function generatePdfFromHtml(htmlContent) {
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
-    if (!process.env.GOOGLE_GENAI_API_KEY) {
-        throw new Error("GOOGLE_GENAI_API_KEY is not configured")
-    }
-
-    const ai = new GoogleGenAI({
-        apiKey: process.env.GOOGLE_GENAI_API_KEY
-    })
+    const ai = createAiClient()
 
     const resumePdfSchema = z.object({
         html: z.string().describe("The HTML content of the resume which can be converted to PDF using any library like puppeteer")
@@ -115,8 +166,7 @@ async function generateResumePdf({ resume, selfDescription, jobDescription }) {
                         The resume should not be so lengthy, it should ideally be 1-2 pages long when converted to PDF. Focus on quality rather than quantity and make sure to include all the relevant information that can increase the candidate's chances of getting an interview call for the given job description.
                     `
 
-    const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
+    const response = await generateContent(ai, {
         contents: prompt,
         config: {
             responseMimeType: "application/json",

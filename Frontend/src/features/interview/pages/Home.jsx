@@ -69,7 +69,14 @@ const Home = () => {
             }
             navigate(`/interview/${data._id}`)
         } catch (err) {
-            setErrorMessage(err.response?.data?.message || "Failed to generate interview plan. Please try again.")
+            const apiMessage = err.response?.data?.message
+            const fallback = err.response?.status === 429
+                ? "AI rate limit reached. Please wait a minute and try again."
+                : "Failed to generate interview plan. Please try again."
+            const message = typeof apiMessage === "string" && apiMessage.length <= 280
+                ? apiMessage
+                : fallback
+            setErrorMessage(message)
         } finally {
             setIsGenerating(false)
         }

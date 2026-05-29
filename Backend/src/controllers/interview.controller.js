@@ -53,7 +53,8 @@ async function generateInterViewReportController(req, res) {
         })
     } catch (err) {
         console.error("generateInterViewReportController:", err)
-        res.status(500).json({
+        const status = err.statusCode || 500
+        res.status(status).json({
             message: err.message || "Failed to generate interview report."
         })
     }
@@ -121,7 +122,8 @@ async function generateResumePdfController(req, res) {
         res.send(pdfBuffer)
     } catch (err) {
         console.error("generateResumePdfController:", err)
-        res.status(500).json({
+        const status = err.statusCode || 500
+        res.status(status).json({
             message: err.message || "Failed to generate resume PDF."
         })
     }
