@@ -1,15 +1,18 @@
-import React, { useState, useRef } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import "../style/home.scss"
 import { useInterview } from '../hooks/useInterview.js'
 import { useNavigate } from 'react-router'
+import { useAuth } from '../../auth/hooks/useAuth.js'
 
 const Home = () => {
 
     const { loading, generateReport, reports } = useInterview()
+    const { handleLogout } = useAuth()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
     const [ isGenerating, setIsGenerating ] = useState(false)
     const [ errorMessage, setErrorMessage ] = useState("")
+    const [ theme, setTheme ] = useState(() => localStorage.getItem("theme") || "dark")
     const resumeInputRef = useRef()
     const [ selectedFile, setSelectedFile ] = useState(null)
 
@@ -45,6 +48,20 @@ const Home = () => {
     }
 
     const navigate = useNavigate()
+
+    useEffect(() => {
+        document.documentElement.setAttribute("data-theme", theme)
+        localStorage.setItem("theme", theme)
+    }, [ theme ])
+
+    const handleThemeToggle = () => {
+        setTheme((prev) => prev === "dark" ? "light" : "dark")
+    }
+
+    const onLogout = async () => {
+        await handleLogout()
+        navigate("/login")
+    }
 
     const handleGenerateReport = async () => {
         setErrorMessage("")
@@ -84,6 +101,14 @@ const Home = () => {
 
     return (
         <div className='home-page'>
+            <div className='top-actions'>
+                <button className='top-action-btn top-action-btn--theme' onClick={handleThemeToggle}>
+                    {theme === "dark" ? "Light Mode" : "Dark Mode"}
+                </button>
+                <button className='top-action-btn top-action-btn--logout' onClick={onLogout}>
+                    Logout
+                </button>
+            </div>
 
             {/* Page Header */}
             <header className='page-header'>
