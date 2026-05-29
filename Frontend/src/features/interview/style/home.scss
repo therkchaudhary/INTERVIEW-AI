@@ -362,28 +362,72 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     width: 100%;
     max-width: 900px;
 
+    h2 {
+        color: $text-primary;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
     .reports-list{
         display: flex;
         gap: 0.75rem;
         flex-wrap: wrap;
 
         .report-item{
+            position: relative;
             background-color: $bg-card;
             border: 1px solid $border-color;
             border-radius: 0.5rem;
             padding: 1rem;
             flex: 1;
+            min-width: 200px;
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
             cursor: pointer;
             flex-shrink: 0;
 
+            h3 {
+                color: $text-primary;
+                font-size: 0.95rem;
+                font-weight: 600;
+                padding-right: 1.25rem;
+                margin: 0;
+            }
+
+            .report-meta {
+                color: $text-muted;
+                font-size: 0.8rem;
+                margin: 0;
+            }
+
             .match-score {
                 font-size: 0.8rem;
                 font-weight: 600;
                 color: $accent;
-                align-items: flex-start;
+                margin: 0;
+            }
+
+            &__delete {
+                position: absolute;
+                top: 0.45rem;
+                right: 0.45rem;
+                width: 1.5rem;
+                height: 1.5rem;
+                border: 1px solid $border-color;
+                border-radius: 0.35rem;
+                background-color: $bg-input;
+                color: $text-muted;
+                font-size: 1rem;
+                line-height: 1;
+                cursor: pointer;
+                transition: color 0.2s, border-color 0.2s, background-color 0.2s;
+
+                &:hover {
+                    color: $badge-required;
+                    border-color: rgba($badge-required, 0.5);
+                    background-color: rgba($badge-required, 0.1);
+                }
             }
         }
     }
@@ -448,10 +492,44 @@ html[data-theme="light"] {
         color: #4b5563;
     }
 
-    .interview-card,
-    .report-item {
+    .interview-card {
         background-color: #ffffff;
         border-color: #d1d5db;
+    }
+
+    .recent-reports {
+        h2 {
+            color: #111827;
+        }
+
+        .report-item {
+            background-color: #ffffff;
+            border-color: #d1d5db;
+
+            h3 {
+                color: #111827;
+            }
+
+            .report-meta {
+                color: #6b7280;
+            }
+
+            .match-score {
+                color: #db2777;
+            }
+
+            &__delete {
+                background-color: #f9fafb;
+                border-color: #d1d5db;
+                color: #6b7280;
+
+                &:hover {
+                    color: #be123c;
+                    border-color: rgba(#be123c, 0.45);
+                    background-color: rgba(#be123c, 0.08);
+                }
+            }
+        }
     }
 
     .panel-divider,

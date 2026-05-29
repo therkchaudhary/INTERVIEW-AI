@@ -6,7 +6,7 @@ import { useAuth } from '../../auth/hooks/useAuth.js'
 
 const Home = () => {
 
-    const { loading, generateReport, reports } = useInterview()
+    const { loading, generateReport, reports, deleteReport } = useInterview()
     const { handleLogout } = useAuth()
     const [ jobDescription, setJobDescription ] = useState("")
     const [ selfDescription, setSelfDescription ] = useState("")
@@ -61,6 +61,17 @@ const Home = () => {
     const onLogout = async () => {
         await handleLogout()
         navigate("/login")
+    }
+
+    const handleDeleteReport = async (e, reportId) => {
+        e.stopPropagation()
+        if (!window.confirm("Delete this interview plan?")) return
+
+        try {
+            await deleteReport(reportId)
+        } catch (err) {
+            setErrorMessage(err.response?.data?.message || "Failed to delete interview plan.")
+        }
     }
 
     const handleGenerateReport = async () => {
@@ -229,6 +240,14 @@ const Home = () => {
                     <ul className='reports-list'>
                         {reports.map(report => (
                             <li key={report._id} className='report-item' onClick={() => navigate(`/interview/${report._id}`)}>
+                                <button
+                                    type="button"
+                                    className='report-item__delete'
+                                    aria-label="Delete interview plan"
+                                    onClick={(e) => handleDeleteReport(e, report._id)}
+                                >
+                                    ×
+                                </button>
                                 <h3>{report.title || 'Untitled Position'}</h3>
                                 <p className='report-meta'>Generated on {new Date(report.createdAt).toLocaleDateString()}</p>
                                 <p className={`match-score ${report.matchScore >= 80 ? 'score--high' : report.matchScore >= 60 ? 'score--mid' : 'score--low'}`}>Match Score: {report.matchScore}%</p>

@@ -48,6 +48,14 @@ export const getAllInterviewReports = async () => {
     return response.data
 }
 
+/**
+ * @description Service to delete interview report by interviewId.
+ */
+export const deleteInterviewReport = async (interviewId) => {
+    const response = await api.delete(`/api/interview/report/${interviewId}`)
+
+    return response.data
+}
 
 /**
  * @description Service to generate resume pdf based on user self description, resume content and job description.
