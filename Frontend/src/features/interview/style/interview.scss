@@ -534,11 +534,11 @@ html[data-theme="light"] {
         }
 
         &__label {
-            color: #6b7280;
+            color: #374151;
         }
 
         &__item {
-            color: #6b7280;
+            color: #374151;
 
             &:hover {
                 background-color: #f3f4f6;
@@ -561,7 +561,7 @@ html[data-theme="light"] {
         }
 
         &__count {
-            color: #6b7280;
+            color: #374151;
             background-color: #f3f4f6;
             border-color: #d1d5db;
         }
@@ -581,7 +581,7 @@ html[data-theme="light"] {
         }
 
         &__chevron {
-            color: #6b7280;
+            color: #374151;
 
             &--open {
                 color: $accent;
@@ -593,7 +593,7 @@ html[data-theme="light"] {
         }
 
         &__section p {
-            color: #4b5563;
+            color: #1f2937;
         }
 
         &__tag {
@@ -627,7 +627,7 @@ html[data-theme="light"] {
         }
 
         &__tasks li {
-            color: #4b5563;
+            color: #1f2937;
         }
 
         &__bullet {
@@ -642,7 +642,7 @@ html[data-theme="light"] {
 
     .match-score {
         &__label {
-            color: #6b7280;
+            color: #374151;
         }
 
         &__value {
@@ -650,7 +650,7 @@ html[data-theme="light"] {
         }
 
         &__pct {
-            color: #6b7280;
+            color: #374151;
         }
 
         &__sub {
@@ -659,7 +659,7 @@ html[data-theme="light"] {
     }
 
     .skill-gaps__label {
-        color: #6b7280;
+        color: #374151;
     }
 
     .skill-tag {
