@@ -546,6 +546,30 @@ html[data-theme="light"] {
         color: #111827;
     }
 
+    .info-box p {
+        color: #374151;
+
+        strong {
+            color: #111827;
+        }
+    }
+
+    .info-box__icon {
+        color: #2563eb;
+    }
+
+    .char-counter {
+        color: #6b7280;
+    }
+
+    .dropzone__filename {
+        color: #111827;
+
+        .file-size {
+            color: #6b7280;
+        }
+    }
+
     .panel__textarea::placeholder {
         color: #6b7280;
     }
