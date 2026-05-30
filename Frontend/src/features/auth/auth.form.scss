@@ -42,3 +42,44 @@ main{
         text-decoration: none;
     }
 }
+
+// ── Responsive: Tablet ────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+    main {
+        padding: 1.5rem 1rem;
+
+        .form-container {
+            min-width: unset;
+            width: 90%;
+            max-width: 400px;
+        }
+    }
+}
+
+// ── Responsive: Mobile ────────────────────────────────────────────────────────
+@media (max-width: 480px) {
+    main {
+        padding: 1rem 0.75rem;
+
+        .form-container {
+            width: 100%;
+            gap: 0.75rem;
+        }
+
+        form {
+            gap: 0.6rem;
+        }
+
+        .input-group input {
+            padding-inline: 0.85rem;
+            padding-block: 0.85rem;
+            font-size: 1rem;
+        }
+
+        button[type="submit"],
+        .submit-btn {
+            padding: 0.85rem;
+            font-size: 1rem;
+        }
+    }
+}
